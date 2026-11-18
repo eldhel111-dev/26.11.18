@@ -67,7 +67,7 @@ ORDER BY region COLLATE "ko-x-icu", 성별;
 SELECT 
     m.name                   AS 회원명 ,
     m.phone                  AS 전화번호 ,
-    c.course_name           AS 강좌명 ,
+    c.course_name            AS 강좌명 ,
     e.enroll_month           AS 수강월
 FROM enrollments e                                      -- JOIN 할때 SELECT FROM ~~ 부터
 LEFT JOIN members m ON e.member_id = m.member_id
@@ -92,49 +92,37 @@ ORDER BY name;
 SELECT
     course_name            AS 종목,
     enroll_month           AS 수강월,
-    COUNT(*)               AS 수강인원,   -- 모르겠음
+    COUNT(*)               AS 수강인원,  
     paid.total_paid             AS 매출액
 FROM (
       SELECT course_id, SUM(pay_amount) AS total_paid          -- 안에 기능부터 작동 확인
       FROM enrollments
       GROUP BY course_id
 ) AS paid
--- ??
 WHERE paid.total_paid > 1000000
 ORDER BY c.course_name, enroll_month;
+-- 모르겠음
+
+
 
 
 
 -- 5번
 -- 강사마다 담당 강좌 수와, 담당 강좌의 이번 달(2026-11) 수강 신청 건수를 구하세요. 맡은 강좌가 없는 강사도 결과에 나와야 하며, 이때 두 값은 0입니다.
+-- 사용 테이블: `instructors`, `sports`, `courses`, `enrollments`
+-- 조건: 강사 8명이 모두 나와야 함
+-- 정렬: 이번달신청 내림차순, 같으면 강사명 오름차순
 SELECT
     name            AS 강사명,
-    sports_id       AS 종목,
-                    AS 담당 강좌수,
-                    AS 이번달 신청
-FROM instructor
-ORDER BY 
--- - **사용 테이블:** `instructors`, `sports`, `courses`, `enrollments`
--- - **조건:** 강사 8명이 모두 나와야 함
--- - **정렬:** 이번달신청 내림차순, 같으면 강사명 오름차순
+    s.sport_name       AS 종목,
+    COUNT(*)         AS 담당강좌수
+    -- ??                AS 이번달신청
+FROM instructors i
+LEFT JOIN sports s ON s.sport_id = i.sport_id
+GROUP BY name, s.sport_id;
+ORDER BY -- ?? DESC, name 
 
--- **출력 열**
 
--- | 순서 | 열 이름 | 내용 |
--- | --- | --- | --- |
--- | 1 | 강사명 |  |
--- | 2 | 종목 | 강사의 담당 종목 이름 |
--- | 3 | 담당강좌수 | 강사가 맡은 강좌 수 |
--- | 4 | 이번달신청 | 담당 강좌의 2026-11 수강 기록 수 |
 
--- **예상 결과**
-
--- ```
---  강사명 |    종목    | 담당강좌수 | 이번달신청
--- --------+------------+------------+------------
---  배수민 | 스포츠댄스 |          3 |         16
---  오민재 | 수영       |          2 |         10
---  임도현 | 골프연습   |          1 |          6
--- ...
--- (8 rows)
--- ```
+-- HAVING JOIN SUB QUERY의 활용과 어떻게 적용하는지 아직 잘 모르겠음
+-- 할때마다 테이블에 있는 요소들이 기억이안나 \d 를 통해 알아 보아 시간이 부족했음
