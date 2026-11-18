@@ -124,5 +124,5 @@ ORDER BY -- ?? DESC, name
 
 
 
--- HAVING JOIN SUB QUERY의 활용과 어떻게 적용하는지 아직 잘 모르겠음
+-- HAVING JOIN SUB QUERY의 개념은 이해했으나 활용과 어떻게 적용하는지 아직 잘 모르겠음
 -- 할때마다 테이블에 있는 요소들이 기억이안나 \d 를 통해 알아 보아 시간이 부족했음
